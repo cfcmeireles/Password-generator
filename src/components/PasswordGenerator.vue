@@ -18,10 +18,9 @@
         @change="logSelectedRequirements"
       />
       {{ requirement.text }}
-      {{ requirement.isChecked }}
     </div>
     <div>New password is: {{ password.newPassword.join("") }}</div>
-    <button @click="generatePasswordLength">
+    <button @click="generatePassword">
       Click here to generate a new password
     </button>
   </div>
@@ -32,10 +31,9 @@ export default {
   data() {
     return {
       password: {
-        timesEachCharacter: [],
+        // timesEachCharacter: [],
         length: [],
         newPassword: [],
-        passlength: [],
       },
       requirements: [
         {
@@ -134,24 +132,26 @@ export default {
     logSelectedRequirements() {
       console.log("selectedRequirements:", this.selectedRequirements);
     },
-    generatePasswordLength() {
+    // generatePasswordLength() {
+    //   this.password.newPassword = [];
+    //   let passwordRequirements = [this.selectedRequirements];
+    //   if (this.password.length == 8) {
+    //     // this.password.passlength = 8;
+    //     this.generatePassword(passwordRequirements);
+    //   }
+    //   if (this.password.length == 12) {
+    //     this.password.passlength = 12;
+    //     this.generatePassword(passwordRequirements);
+    //   }
+    //   if (this.password.length == 16) {
+    //     this.password.passlength = 16;
+    //     this.generatePassword(passwordRequirements);
+    //   }
+    // },
+    generatePassword() {
       this.password.newPassword = [];
       let passwordRequirements = [this.selectedRequirements];
-      if (this.password.length == 8) {
-        this.password.passlength = 8;
-        this.generatePassword(passwordRequirements);
-      }
-      if (this.password.length == 12) {
-        this.password.passlength = 12;
-        this.generatePassword(passwordRequirements);
-      }
-      if (this.password.length == 16) {
-        this.password.passlength = 16;
-        this.generatePassword(passwordRequirements);
-      }
-    },
-    generatePassword(passwordRequirements) {
-      for (var i = 0; i < this.password.passlength; i++) {
+      for (var i = 0; i < this.password.length; i++) {
         passwordRequirements.forEach((req) => {
           const randomValue = Math.floor(Math.random() * req.length);
           const result = req[randomValue];
