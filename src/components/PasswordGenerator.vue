@@ -1,12 +1,10 @@
 <template>
   <div>
     <p>What length would you like your new password to have?</p>
-    <select v-model="password.length">
-      <option disabled selected value>-- select an option --</option>
-      <option>8</option>
-      <option>12</option>
-      <option>16</option>
-    </select>
+
+    <input v-model="password.length" type="range" min="8" max="16" step="4" />
+    <output>{{ password.length }}</output>
+
     <div
       class="checkbox-items"
       v-for="requirement in requirements"
@@ -19,11 +17,15 @@
       />
       {{ requirement.text }}
     </div>
-    <div>New password is: {{ password.newPassword.join("") }}</div>
+    <div>
+      New password is: {{ password.newPassword.join("") }}
+      {{ password.newPassword.length }}
+    </div>
     <button @click="generatePassword">
       Click here to generate a new password
     </button>
   </div>
+  <p v-if="showAlert">Please check at least 1 requirement</p>
 </template>
   
   <script>
@@ -32,8 +34,10 @@ export default {
     return {
       password: {
         // timesEachCharacter: [],
-        length: [],
+        length: 12,
         newPassword: [],
+        buttonClicked: false,
+        showAlert: false,
       },
       requirements: [
         {
@@ -127,6 +131,12 @@ export default {
       );
       return characters;
     },
+    checkedRequirements() {
+      const checkRequirements = this.requirements.filter(
+        (checked) => checked.isChecked
+      );
+      return checkRequirements;
+    },
   },
   methods: {
     logSelectedRequirements() {
@@ -149,12 +159,18 @@ export default {
     //   }
     // },
     generatePassword() {
+      if (!this.checkedRequirements.length) {
+        this.showAlert = true;
+      } else {
+        this.showAlert = false;
+      }
       this.password.newPassword = [];
       let passwordRequirements = [this.selectedRequirements];
       for (var i = 0; i < this.password.length; i++) {
         passwordRequirements.forEach((req) => {
           const randomValue = Math.floor(Math.random() * req.length);
           const result = req[randomValue];
+          console.log(result);
           this.password.newPassword.push(result);
         });
       }
