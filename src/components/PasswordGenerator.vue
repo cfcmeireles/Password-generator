@@ -1,31 +1,59 @@
 <template>
-  <div>
-    <p>What length would you like your new password to have?</p>
-
-    <input v-model="password.length" type="range" min="8" max="16" step="4" />
-    <output>{{ password.length }}</output>
-
-    <div
-      class="checkbox-items"
-      v-for="requirement in requirements"
-      :key="requirement.key"
-    >
+  <div id="password-generator">
+    <div class="generated-password">{{ password.newPassword.join("") }}</div>
+    <div class="main-div">
+      <p>Character length</p>
       <input
-        type="checkbox"
-        v-model="requirement.isChecked"
-        @change="logSelectedRequirements"
+        v-model="password.length"
+        type="range"
+        min="8"
+        max="16"
+        step="4"
+        class="password-range"
       />
-      {{ requirement.text }}
+      <output>{{ password.length }}</output>
+
+      <div
+        class="checkbox-items"
+        v-for="requirement in requirements"
+        :key="requirement.key"
+      >
+        <input
+          type="checkbox"
+          v-model="requirement.isChecked"
+          @change="passwordStrenght"
+        />
+        {{ requirement.text }}
+      </div>
+      <div class="password-strength" @change="passwordStrenght">
+        strength {{ password.strength }}
+        <div class="strength-bars">
+          <div
+            class="test"
+            style="height: 24px; width: 2%"
+            :style="`background-color: ${this.password.barColor1}`"
+          ></div>
+          <div
+            class="test"
+            style="height: 24px; width: 2%"
+            :style="`background-color: ${this.password.barColor2}`"
+          ></div>
+          <div
+            class="test"
+            style="height: 24px; width: 2%"
+            :style="`background-color: ${this.password.barColor3}`"
+          ></div>
+          <div
+            class="test"
+            style="height: 24px; width: 2%"
+            :style="`background-color: ${this.password.barColor4}`"
+          ></div>
+        </div>
+      </div>
+      <button @click="generatePassword">Generate</button>
+      <p v-if="showAlert">Please check at least 1 requirement</p>
     </div>
-    <div>
-      New password is: {{ password.newPassword.join("") }}
-      {{ password.newPassword.length }}
-    </div>
-    <button @click="generatePassword">
-      Click here to generate a new password
-    </button>
   </div>
-  <p v-if="showAlert">Please check at least 1 requirement</p>
 </template>
   
   <script>
@@ -38,6 +66,11 @@ export default {
         newPassword: [],
         buttonClicked: false,
         showAlert: false,
+        strength: "",
+        barColor1: "",
+        barColor2: "",
+        barColor3: "",
+        barColor4: "",
       },
       requirements: [
         {
@@ -161,6 +194,7 @@ export default {
     generatePassword() {
       if (!this.checkedRequirements.length) {
         this.showAlert = true;
+        this.password.strength = "";
       } else {
         this.showAlert = false;
       }
@@ -175,12 +209,94 @@ export default {
         });
       }
     },
+    passwordStrenght() {
+      if (this.checkedRequirements.length === 1) {
+        this.password.strength = "Weak";
+        this.password.barColor1 = "#F3CD6C";
+        this.password.barColor2 = "";
+        this.password.barColor3 = "";
+      } else if (
+        this.checkedRequirements.length < 3 &&
+        this.checkedRequirements.length > 1
+      ) {
+        this.password.strength = "Medium";
+        this.password.barColor2 = "#F3CD6C";
+        this.password.barColor3 = "";
+        this.password.barColor4 = "";
+      } else if (
+        this.checkedRequirements.length < 4 &&
+        this.checkedRequirements.length > 1
+      ) {
+        this.password.strength = "Medium";
+        this.password.barColor3 = "#F3CD6C";
+        this.password.barColor4 = "";
+      } else if (this.checkedRequirements.length > 3) {
+        this.password.strength = "Strong";
+        this.password.barColor4 = "#F3CD6C";
+      } else {
+        this.password.strength = "";
+        this.password.barColor1 = "";
+        this.password.barColor2 = "";
+        this.password.barColor3 = "";
+        this.password.barColor4 = "";
+      }
+    },
   },
 };
 </script>
   
-<style scoped>
+<style>
+#password-generator {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 70px 500px;
+  width: 100%;
+}
+
+.generated-password {
+  background: #24232b;
+  text-align: center;
+  grid-column-start: 2;
+  grid-row-start: 1;
+  margin-bottom: 10px;
+}
+
+.main-div {
+  background: #24232b;
+  grid-column-start: 2;
+  grid-row-start: 2;
+}
+/* 
+.password-range {
+  background: red;
+} */
+
+/* .password-range::-moz-range-thumb {
+
+  width: 25px;
+  height: 25px;
+  background: #04aa6d;
+  cursor: pointer;
+} */
+
 .checkbox-items {
   display: block;
+}
+
+button {
+  background: #a4ffaf;
+}
+
+.test {
+  background: #24232b;
+  border: 1px solid white;
+}
+
+.test:nth-child(n + 2) {
+  margin-left: 5px;
+}
+
+.strength-bars {
+  display: flex;
 }
 </style>
