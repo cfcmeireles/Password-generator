@@ -50,9 +50,7 @@
           :style="`background-color: ${this.password.barColor4}`"
         ></div>
       </div>
-      <button class="generate-password" @click="generatePassword">
-        Generate
-      </button>
+      <button class="generate-btn" @click="generatePassword">Generate</button>
       <p v-if="showAlert">Please check at least 1 requirement</p>
     </div>
   </div>
@@ -272,11 +270,11 @@ export default {
   grid-row-start: 2; */
   height: 500px;
   width: 500px;
-  padding: 10px;
+  padding: 20px;
 }
 
 .password-range {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
   width: 100%;
 }
 /* 
@@ -298,13 +296,13 @@ export default {
 }
 
 .checkbox-items:nth-child(7) {
-  margin-bottom: 50px;
+  margin-bottom: 30px;
 }
 
-.generate-password {
+.generate-btn {
   background: #a4ffaf;
   width: 100%;
-  padding: 20px;
+  padding: 15px;
   font-size: 18px;
 }
 
