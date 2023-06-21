@@ -18,13 +18,22 @@ export default {
 </script>
 
 <style>
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+
 body {
   height: 100vh;
   background: #121117;
   color: #e6e5ea;
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
 }
 
 h1 {
   text-align: center;
+}
+
+#password-app {
+  display: flex;
+  justify-content: center;
 }
 </style>

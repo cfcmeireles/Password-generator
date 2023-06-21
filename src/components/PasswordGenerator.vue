@@ -3,6 +3,7 @@
     <div class="generated-password">{{ password.newPassword.join("") }}</div>
     <div class="main-div">
       <p>Character length</p>
+      <output>{{ password.length }}</output>
       <input
         v-model="password.length"
         type="range"
@@ -11,7 +12,6 @@
         step="4"
         class="password-range"
       />
-      <output>{{ password.length }}</output>
 
       <div
         class="checkbox-items"
@@ -21,36 +21,38 @@
         <input
           type="checkbox"
           v-model="requirement.isChecked"
-          @change="passwordStrenght"
+          @change="passwordStrength"
         />
         {{ requirement.text }}
       </div>
-      <div class="password-strength" @change="passwordStrenght">
-        strength {{ password.strength }}
-        <div class="strength-bars">
-          <div
-            class="test"
-            style="height: 24px; width: 2%"
-            :style="`background-color: ${this.password.barColor1}`"
-          ></div>
-          <div
-            class="test"
-            style="height: 24px; width: 2%"
-            :style="`background-color: ${this.password.barColor2}`"
-          ></div>
-          <div
-            class="test"
-            style="height: 24px; width: 2%"
-            :style="`background-color: ${this.password.barColor3}`"
-          ></div>
-          <div
-            class="test"
-            style="height: 24px; width: 2%"
-            :style="`background-color: ${this.password.barColor4}`"
-          ></div>
-        </div>
+      <div class="password-strength" @change="passwordStrength">
+        {{ password.strength }}
       </div>
-      <button @click="generatePassword">Generate</button>
+      <div class="strength-bars">
+        <div
+          class="bars"
+          style="height: 24px; width: 2%"
+          :style="`background-color: ${this.password.barColor1}`"
+        ></div>
+        <div
+          class="bars"
+          style="height: 24px; width: 2%"
+          :style="`background-color: ${this.password.barColor2}`"
+        ></div>
+        <div
+          class="bars"
+          style="height: 24px; width: 2%"
+          :style="`background-color: ${this.password.barColor3}`"
+        ></div>
+        <div
+          class="bars"
+          style="height: 24px; width: 2%"
+          :style="`background-color: ${this.password.barColor4}`"
+        ></div>
+      </div>
+      <button class="generate-password" @click="generatePassword">
+        Generate
+      </button>
       <p v-if="showAlert">Please check at least 1 requirement</p>
     </div>
   </div>
@@ -66,7 +68,7 @@ export default {
         newPassword: [],
         buttonClicked: false,
         showAlert: false,
-        strength: "",
+        strength: "STRENGTH",
         barColor1: "",
         barColor2: "",
         barColor3: "",
@@ -75,7 +77,7 @@ export default {
       requirements: [
         {
           key: 1,
-          text: "Include Lower case letters",
+          text: "Include Lowercase Letters",
           isChecked: false,
           characters: [
             "a",
@@ -108,7 +110,7 @@ export default {
         },
         {
           key: 2,
-          text: "Include Upper case letters",
+          text: "Include Uppercase Letters",
           isChecked: false,
           characters: [
             "A",
@@ -194,7 +196,6 @@ export default {
     generatePassword() {
       if (!this.checkedRequirements.length) {
         this.showAlert = true;
-        this.password.strength = "";
       } else {
         this.showAlert = false;
       }
@@ -209,9 +210,9 @@ export default {
         });
       }
     },
-    passwordStrenght() {
+    passwordStrength() {
       if (this.checkedRequirements.length === 1) {
-        this.password.strength = "Weak";
+        this.password.strength = "WEAK";
         this.password.barColor1 = "#F3CD6C";
         this.password.barColor2 = "";
         this.password.barColor3 = "";
@@ -219,7 +220,7 @@ export default {
         this.checkedRequirements.length < 3 &&
         this.checkedRequirements.length > 1
       ) {
-        this.password.strength = "Medium";
+        this.password.strength = "MEDIUM";
         this.password.barColor2 = "#F3CD6C";
         this.password.barColor3 = "";
         this.password.barColor4 = "";
@@ -227,14 +228,14 @@ export default {
         this.checkedRequirements.length < 4 &&
         this.checkedRequirements.length > 1
       ) {
-        this.password.strength = "Medium";
+        this.password.strength = "MEDIUM";
         this.password.barColor3 = "#F3CD6C";
         this.password.barColor4 = "";
       } else if (this.checkedRequirements.length > 3) {
-        this.password.strength = "Strong";
+        this.password.strength = "STRONG";
         this.password.barColor4 = "#F3CD6C";
       } else {
-        this.password.strength = "";
+        this.password.strength = "STRENGTH";
         this.password.barColor1 = "";
         this.password.barColor2 = "";
         this.password.barColor3 = "";
@@ -247,24 +248,36 @@ export default {
   
 <style>
 #password-generator {
-  display: grid;
+  /* display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 70px 500px;
+  grid-template-rows: 70px 500px; */
   width: 100%;
 }
 
 .generated-password {
   background: #24232b;
-  text-align: center;
-  grid-column-start: 2;
-  grid-row-start: 1;
+  height: 50px;
+  /* grid-column-start: 2;
+  grid-row-start: 1; */
   margin-bottom: 10px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .main-div {
   background: #24232b;
-  grid-column-start: 2;
-  grid-row-start: 2;
+  /* grid-column-start: 2;
+  grid-row-start: 2; */
+  height: 500px;
+  width: 500px;
+  padding: 10px;
+}
+
+.password-range {
+  margin-bottom: 50px;
+  width: 100%;
 }
 /* 
 .password-range {
@@ -281,18 +294,31 @@ export default {
 
 .checkbox-items {
   display: block;
+  margin-bottom: 20px;
 }
 
-button {
+.checkbox-items:nth-child(7) {
+  margin-bottom: 50px;
+}
+
+.generate-password {
   background: #a4ffaf;
+  width: 100%;
+  padding: 20px;
+  font-size: 18px;
 }
 
-.test {
+.password-strength {
+  margin-bottom: 10px;
+}
+
+.bars {
   background: #24232b;
   border: 1px solid white;
+  margin-bottom: 20px;
 }
 
-.test:nth-child(n + 2) {
+.bars:nth-child(n + 2) {
   margin-left: 5px;
 }
 
