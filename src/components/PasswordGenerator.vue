@@ -177,6 +177,8 @@ export default {
       console.log(this.password.result);
       if (
         this.checkedRequirements.length === 2 &&
+        this.requirements[0].isChecked === true &&
+        this.requirements[2].isChecked === true &&
         this.requirements[2].characters.every(
           (element) => !this.password.result.includes(element)
         )
@@ -185,7 +187,7 @@ export default {
         this.password.result = [];
         this.generatePassword();
       }
-      this.password.newPassword.push(this.password.result);
+      this.password.newPassword.push(this.password.result.join(""));
       this.password.result = [];
     },
     passwordStrength(index) {
