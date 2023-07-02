@@ -17,39 +17,27 @@
         class="checkbox-items"
         v-for="requirement in requirements"
         :key="requirement.key"
+        @change="logSelectedRequirements"
       >
         <input
           type="checkbox"
           v-model="requirement.isChecked"
-          @change="passwordStrength"
+          @change="passwordStrength(index)"
         />
         {{ requirement.text }}
       </div>
-      <div class="password-strength" @change="passwordStrength">
+      <div class="password-strength">
         {{ password.strength }}
       </div>
-      <div class="strength-bars">
-        <div
-          class="bars"
-          style="height: 24px; width: 2%"
-          :style="`background-color: ${this.password.barColor1}`"
-        ></div>
-        <div
-          class="bars"
-          style="height: 24px; width: 2%"
-          :style="`background-color: ${this.password.barColor2}`"
-        ></div>
-        <div
-          class="bars"
-          style="height: 24px; width: 2%"
-          :style="`background-color: ${this.password.barColor3}`"
-        ></div>
-        <div
-          class="bars"
-          style="height: 24px; width: 2%"
-          :style="`background-color: ${this.password.barColor4}`"
-        ></div>
-      </div>
+
+      <div
+        class="bars"
+        v-for="(bar, index) in 4"
+        :key="index"
+        :style="passwordStrength(index)"
+        style="height: 24px; width: 2%"
+      ></div>
+
       <button class="generate-btn" @click="generatePassword">Generate</button>
       <p v-if="showAlert">Please check at least 1 requirement</p>
     </div>
@@ -66,11 +54,8 @@ export default {
         newPassword: [],
         buttonClicked: false,
         showAlert: false,
-        strength: "STRENGTH",
-        barColor1: "",
-        barColor2: "",
-        barColor3: "",
-        barColor4: "",
+        strength: "",
+        result: [],
       },
       requirements: [
         {
@@ -175,22 +160,6 @@ export default {
     logSelectedRequirements() {
       console.log("selectedRequirements:", this.selectedRequirements);
     },
-    // generatePasswordLength() {
-    //   this.password.newPassword = [];
-    //   let passwordRequirements = [this.selectedRequirements];
-    //   if (this.password.length == 8) {
-    //     // this.password.passlength = 8;
-    //     this.generatePassword(passwordRequirements);
-    //   }
-    //   if (this.password.length == 12) {
-    //     this.password.passlength = 12;
-    //     this.generatePassword(passwordRequirements);
-    //   }
-    //   if (this.password.length == 16) {
-    //     this.password.passlength = 16;
-    //     this.generatePassword(passwordRequirements);
-    //   }
-    // },
     generatePassword() {
       if (!this.checkedRequirements.length) {
         this.showAlert = true;
@@ -202,45 +171,77 @@ export default {
       for (var i = 0; i < this.password.length; i++) {
         passwordRequirements.forEach((req) => {
           const randomValue = Math.floor(Math.random() * req.length);
-          const result = req[randomValue];
-          console.log(result);
-          this.password.newPassword.push(result);
+          this.password.result.push(req[randomValue]);
         });
       }
+      console.log(this.password.result);
+      if (
+        this.checkedRequirements.length === 2 &&
+        this.requirements[2].characters.every(
+          (element) => !this.password.result.includes(element)
+        )
+      ) {
+        alert("error");
+        this.password.result = [];
+        this.generatePassword();
+      }
+      this.password.newPassword.push(this.password.result);
+      this.password.result = [];
     },
-    passwordStrength() {
+    passwordStrength(index) {
+      if (index < this.checkedRequirements.length) {
+        return {
+          backgroundColor: "#F3CD6C",
+        };
+      }
       if (this.checkedRequirements.length === 1) {
         this.password.strength = "WEAK";
-        this.password.barColor1 = "#F3CD6C";
-        this.password.barColor2 = "";
-        this.password.barColor3 = "";
       } else if (
-        this.checkedRequirements.length < 3 &&
+        this.checkedRequirements.length <= 3 &&
         this.checkedRequirements.length > 1
       ) {
         this.password.strength = "MEDIUM";
-        this.password.barColor2 = "#F3CD6C";
-        this.password.barColor3 = "";
-        this.password.barColor4 = "";
-      } else if (
-        this.checkedRequirements.length < 4 &&
-        this.checkedRequirements.length > 1
-      ) {
-        this.password.strength = "MEDIUM";
-        this.password.barColor3 = "#F3CD6C";
-        this.password.barColor4 = "";
       } else if (this.checkedRequirements.length > 3) {
         this.password.strength = "STRONG";
-        this.password.barColor4 = "#F3CD6C";
       } else {
         this.password.strength = "STRENGTH";
-        this.password.barColor1 = "";
-        this.password.barColor2 = "";
-        this.password.barColor3 = "";
-        this.password.barColor4 = "";
       }
     },
   },
+
+  // passwordStrength() {
+  //   if (this.checkedRequirements.length === 1) {
+  //     this.password.strength = "WEAK";
+  //     this.password.barColor1 = "#F3CD6C";
+  //     this.password.barColor2 = "";
+  //     this.password.barColor3 = "";
+  //   } else if (
+  //     this.checkedRequirements.length < 3 &&
+  //     this.checkedRequirements.length > 1
+  //   ) {
+  //     this.password.strength = "MEDIUM";
+  //     this.password.barColor2 = "#F3CD6C";
+  //     this.password.barColor3 = "";
+  //     this.password.barColor4 = "";
+  //   } else if (
+  //     this.checkedRequirements.length < 4 &&
+  //     this.checkedRequirements.length > 1
+  //   ) {
+  //     this.password.strength = "MEDIUM";
+  //     this.password.barColor3 = "#F3CD6C";
+  //     this.password.barColor4 = "";
+  //   } else if (this.checkedRequirements.length > 3) {
+  //     this.password.strength = "STRONG";
+  //     this.password.barColor4 = "#F3CD6C";
+  //   } else {
+  //     this.password.strength = "STRENGTH";
+  //     this.password.barColor1 = "";
+  //     this.password.barColor2 = "";
+  //     this.password.barColor3 = "";
+  //     this.password.barColor4 = "";
+  //   }
+  // },
+  // },
 };
 </script>
   
@@ -314,6 +315,7 @@ export default {
   background: #24232b;
   border: 1px solid white;
   margin-bottom: 20px;
+  display: inline-block;
 }
 
 .bars:nth-child(n + 2) {
