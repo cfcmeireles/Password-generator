@@ -49,7 +49,6 @@ export default {
   data() {
     return {
       password: {
-        // timesEachCharacter: [],
         length: 12,
         newPassword: [],
         buttonClicked: false,
@@ -159,6 +158,7 @@ export default {
   methods: {
     logSelectedRequirements() {
       console.log("selectedRequirements:", this.selectedRequirements);
+      console.log("checkedRequirements:", this.checkedRequirements.length);
     },
     generatePassword() {
       if (!this.checkedRequirements.length) {
@@ -175,17 +175,17 @@ export default {
         });
       }
       console.log(this.password.result);
-      if (
-        this.checkedRequirements.length === 2 &&
-        this.requirements[0].isChecked === true &&
-        this.requirements[2].isChecked === true &&
-        this.requirements[2].characters.every(
+      let missingCharacters;
+      for (var j = 0; j < this.checkedRequirements.length; j++) {
+        missingCharacters = this.checkedRequirements[j].characters.every(
           (element) => !this.password.result.includes(element)
-        )
-      ) {
-        alert("error");
-        this.password.result = [];
-        this.generatePassword();
+        );
+      }
+      if (missingCharacters) {
+        {
+          this.password.result = [];
+          this.generatePassword();
+        }
       }
       this.password.newPassword.push(this.password.result.join(""));
       this.password.result = [];
@@ -210,40 +210,6 @@ export default {
       }
     },
   },
-
-  // passwordStrength() {
-  //   if (this.checkedRequirements.length === 1) {
-  //     this.password.strength = "WEAK";
-  //     this.password.barColor1 = "#F3CD6C";
-  //     this.password.barColor2 = "";
-  //     this.password.barColor3 = "";
-  //   } else if (
-  //     this.checkedRequirements.length < 3 &&
-  //     this.checkedRequirements.length > 1
-  //   ) {
-  //     this.password.strength = "MEDIUM";
-  //     this.password.barColor2 = "#F3CD6C";
-  //     this.password.barColor3 = "";
-  //     this.password.barColor4 = "";
-  //   } else if (
-  //     this.checkedRequirements.length < 4 &&
-  //     this.checkedRequirements.length > 1
-  //   ) {
-  //     this.password.strength = "MEDIUM";
-  //     this.password.barColor3 = "#F3CD6C";
-  //     this.password.barColor4 = "";
-  //   } else if (this.checkedRequirements.length > 3) {
-  //     this.password.strength = "STRONG";
-  //     this.password.barColor4 = "#F3CD6C";
-  //   } else {
-  //     this.password.strength = "STRENGTH";
-  //     this.password.barColor1 = "";
-  //     this.password.barColor2 = "";
-  //     this.password.barColor3 = "";
-  //     this.password.barColor4 = "";
-  //   }
-  // },
-  // },
 };
 </script>
   
