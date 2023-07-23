@@ -1,6 +1,8 @@
 <template>
   <div id="password-generator">
-    <div class="generated-password">{{ password.newPassword.join("") }}</div>
+    <div class="generated-password" data-placeholder="P4$5W0rD?">
+      {{ password.newPassword.join("") }}
+    </div>
     <div class="main-div">
       <p>Character length</p>
       <output>{{ password.length }}</output>
@@ -26,18 +28,18 @@
         />
         {{ requirement.text }}
       </div>
-      <div class="password-strength">
-        {{ password.strength }}
+      <div class="strength-display">
+        <div class="password-strength">
+          {{ password.strength }}
+        </div>
+        <div
+          class="bars"
+          v-for="(bar, index) in 4"
+          :key="index"
+          :style="passwordStrength(index)"
+          style="height: 24px; width: 2%"
+        ></div>
       </div>
-
-      <div
-        class="bars"
-        v-for="(bar, index) in 4"
-        :key="index"
-        :style="passwordStrength(index)"
-        style="height: 24px; width: 2%"
-      ></div>
-
       <button class="generate-btn" @click="generatePassword">Generate</button>
       <p v-if="showAlert">Please check at least 1 requirement</p>
     </div>
@@ -175,13 +177,15 @@ export default {
         });
       }
       console.log(this.password.result);
-      let missingCharacters;
+      let missingRequiredCharacters;
       for (var j = 0; j < this.checkedRequirements.length; j++) {
-        missingCharacters = this.checkedRequirements[j].characters.every(
+        missingRequiredCharacters = this.checkedRequirements[
+          j
+        ].characters.every(
           (element) => !this.password.result.includes(element)
         );
       }
-      if (missingCharacters) {
+      if (missingRequiredCharacters) {
         {
           this.password.result = [];
           this.generatePassword();
@@ -196,17 +200,13 @@ export default {
           backgroundColor: "#F3CD6C",
         };
       }
-      if (this.checkedRequirements.length === 1) {
-        this.password.strength = "WEAK";
-      } else if (
-        this.checkedRequirements.length <= 3 &&
-        this.checkedRequirements.length > 1
-      ) {
-        this.password.strength = "MEDIUM";
-      } else if (this.checkedRequirements.length > 3) {
-        this.password.strength = "STRONG";
-      } else {
+      let strengthText = ["WEAK", "MEDIUM", "MEDIUM", "STRONG"];
+      if (!this.checkedRequirements.length) {
         this.password.strength = "STRENGTH";
+      } else {
+        for (let i = 0; i < this.checkedRequirements.length; i++) {
+          this.password.strength = strengthText[i];
+        }
       }
     },
   },
@@ -214,29 +214,23 @@ export default {
 </script>
   
 <style>
-#password-generator {
-  /* display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 70px 500px; */
-  width: 100%;
-}
-
 .generated-password {
   background: #24232b;
-  height: 50px;
-  /* grid-column-start: 2;
-  grid-row-start: 1; */
+  height: 60px;
   margin-bottom: 10px;
   display: flex;
-  align-content: center;
   justify-content: center;
   align-items: center;
+  width: 540px;
+}
+
+div:empty:before {
+  content: attr(data-placeholder);
+  color: gray;
 }
 
 .main-div {
   background: #24232b;
-  /* grid-column-start: 2;
-  grid-row-start: 2; */
   height: 500px;
   width: 500px;
   padding: 20px;
@@ -246,18 +240,6 @@ export default {
   margin-bottom: 30px;
   width: 100%;
 }
-/* 
-.password-range {
-  background: red;
-} */
-
-/* .password-range::-moz-range-thumb {
-
-  width: 25px;
-  height: 25px;
-  background: #04aa6d;
-  cursor: pointer;
-} */
 
 .checkbox-items {
   display: block;
@@ -275,15 +257,24 @@ export default {
   font-size: 18px;
 }
 
+.strength-display {
+  background: #121117;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
 .password-strength {
   margin-bottom: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .bars {
   background: #24232b;
   border: 1px solid white;
-  margin-bottom: 20px;
-  display: inline-block;
+  margin-top: 12px;
 }
 
 .bars:nth-child(n + 2) {
@@ -292,5 +283,25 @@ export default {
 
 .strength-bars {
   display: flex;
+}
+
+@media only screen and (max-width: 500px) {
+  .generated-password {
+    width: 340px;
+  }
+
+  .main-div {
+    width: 300px;
+  }
+}
+
+@media only screen and (min-width: 501px) and (max-width: 600px) {
+  .generated-password {
+    width: 440px;
+  }
+
+  .main-div {
+    width: 400px;
+  }
 }
 </style>

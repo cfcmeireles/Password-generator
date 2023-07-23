@@ -35,5 +35,13 @@ h1 {
 #password-app {
   display: flex;
   justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+@media only screen and (max-width: 500px) {
+  body {
+    font-size: 15px;
+  }
 }
 </style>
