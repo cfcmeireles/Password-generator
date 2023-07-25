@@ -201,11 +201,12 @@ export default {
         };
       }
       let strengthText = ["WEAK", "MEDIUM", "MEDIUM", "STRONG"];
-      if (!this.checkedRequirements.length) {
+      let reqIndex = this.checkedRequirements.length;
+      if (!reqIndex) {
         this.password.strength = "STRENGTH";
       } else {
-        for (let i = 0; i < this.checkedRequirements.length; i++) {
-          this.password.strength = strengthText[i];
+        for (let i = 0; i < reqIndex; i++) {
+          this.password.strength = strengthText[reqIndex];
         }
       }
     },
