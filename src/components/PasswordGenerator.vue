@@ -206,7 +206,7 @@ export default {
         this.password.strength = "STRENGTH";
       } else {
         for (let i = 0; i < reqIndex; i++) {
-          this.password.strength = strengthText[reqIndex];
+          this.password.strength = strengthText[reqIndex - 1];
         }
       }
     },
