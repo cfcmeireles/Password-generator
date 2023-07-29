@@ -179,11 +179,11 @@ export default {
       console.log(this.password.result);
       let missingRequiredCharacters;
       for (var j = 0; j < this.checkedRequirements.length; j++) {
-        missingRequiredCharacters = this.checkedRequirements[
-          j
-        ].characters.every(
-          (element) => !this.password.result.includes(element)
-        );
+        missingRequiredCharacters =
+          missingRequiredCharacters ||
+          this.checkedRequirements[j].characters.every(
+            (element) => !this.password.result.includes(element)
+          );
       }
       if (missingRequiredCharacters) {
         {
@@ -205,9 +205,7 @@ export default {
       if (!reqIndex) {
         this.password.strength = "STRENGTH";
       } else {
-        for (let i = 0; i < reqIndex; i++) {
-          this.password.strength = strengthText[reqIndex - 1];
-        }
+        this.password.strength = strengthText[reqIndex - 1];
       }
     },
   },
