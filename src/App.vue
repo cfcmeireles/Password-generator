@@ -5,7 +5,7 @@
       property="og:description"
       content="Generate a new password with a series of selectable requirements"
     />
-    <meta property="og:image" content="/src/assets/PasswordGenerator.png" />
+    <meta property="og:image" content="assets/PasswordGenerator.png" />
   </head>
   <main id="password-app">
     <div>
