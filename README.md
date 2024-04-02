@@ -4,7 +4,7 @@ A project started with the intention to practice Vue 3 while also building somet
 
 ## Tech used
 
-HTML
-CSS
-Vue 3
+- HTML
+- CSS
+- Vue 3
 
